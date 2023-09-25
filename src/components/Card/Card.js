@@ -1,5 +1,5 @@
-import React from 'react'
-import { ClipboardEvent } from 'react'
+import React from 'react';
+import "./Card.css"
 
 const Card = ({pokemon}) => {
   return (
@@ -12,11 +12,13 @@ const Card = ({pokemon}) => {
         </h3>
         <div className='cardType'>
             <div>タイプ</div>
-            {pokemon.types.map((type) => {
-                return 
-                <div>
-                    <span className='typeName'>{type}</span>
-                </div>
+            {pokemon.types.map((type,key) => {
+                return(
+                    <div key={key}>
+                        <span className='typeName' >{type.type.name}</span>
+                    </div>
+                );
+
             })}
         </div>
         <div className='cardInfo'>
