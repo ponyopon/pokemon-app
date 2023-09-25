@@ -11,6 +11,7 @@ function App() {
   const [pokemonData, setPokemonData] = useState([]);
   const [nextURL, setNextURL] = useState('');
   const [prevURL, setPrevURL] = useState('');
+  //console.log(nextURL)
 
   useEffect( () => {
     const fetchPokemonData = async () => {
@@ -35,6 +36,7 @@ const loadPokemon = async (data) => {
   setPokemonData(_pokemonData);
 };
 const handleNextPage = async() => {
+  if (!nextURL) return;
   setLoading(true);
   let data = await getAllPokemon(nextURL)
   await loadPokemon(data.results);
@@ -42,12 +44,33 @@ const handleNextPage = async() => {
   setPrevURL(data.previous);
   setLoading(false)
 };
+
+const handleFinalPage = async() => {
+  setLoading(true);
+  const finalURL = `https://pokeapi.co/api/v2/pokemon?offset=${1272}&limit=20`;
+  let data = await getAllPokemon(finalURL)
+  await loadPokemon(data.results);
+  setNextURL(data.next)
+  setPrevURL(data.previous);
+  setLoading(false)
+};
+
 const handlePrevPage = async() => {
   if (!prevURL) return;
 
   setLoading(true);
   let data = await getAllPokemon(prevURL)
   await loadPokemon(data.results);
+  setNextURL(data.next)
+  setPrevURL(data.previous)
+  setLoading(false)
+};
+
+const handleFirstPage = async() => {
+  setLoading(true);
+  let data = await getAllPokemon("https://pokeapi.co/api/v2/pokemon?offset=0&limit=20")
+  await loadPokemon(data.results);
+  setNextURL(data.next)
   setPrevURL(data.previous)
   setLoading(false)
 };
@@ -66,8 +89,10 @@ const handlePrevPage = async() => {
       })}
     </div>
     <div className='btn'>
+      <button onClick={handleFirstPage}>最初へ</button>
       <button onClick={handlePrevPage}>前へ</button>
       <button onClick={handleNextPage}>次へ</button>
+      <button onClick={handleFinalPage}>最後へ</button>
     </div>
 
   </>
