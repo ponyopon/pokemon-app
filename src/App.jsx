@@ -11,6 +11,7 @@ function App() {
   const [pokemonData, setPokemonData] = useState([]);
   const [nextURL, setNextURL] = useState('');
   const [prevURL, setPrevURL] = useState('');
+  const [selectPage, setSelectPage] = useState();
   //console.log(nextURL)
 
   useEffect( () => {
@@ -75,6 +76,22 @@ const handleFirstPage = async() => {
   setLoading(false)
 };
 
+const handleSelectPage = async() => {
+  setLoading(true);
+  let data = await getAllPokemon(`https://pokeapi.co/api/v2/pokemon?offset=${selectPage * 20}&limit=20`)
+  console.log(data)
+  console.log(selectPage)
+  await loadPokemon(data.results);
+  setNextURL(data.next)
+  setPrevURL(data.previous)
+  setLoading(false)
+};
+
+const onChangePage = (event) => {
+  
+  setSelectPage(event.target.value)
+  console.log(selectPage)
+}
   return (
     <>
     <Navbar />
@@ -93,6 +110,8 @@ const handleFirstPage = async() => {
       <button onClick={handlePrevPage}>前へ</button>
       <button onClick={handleNextPage}>次へ</button>
       <button onClick={handleFinalPage}>最後へ</button>
+      <input id='title' placeholder="飛びたいページ" type='text' onChange={onChangePage}/>
+      <button onClick={handleSelectPage}>飛びたいページ</button>
     </div>
 
   </>
